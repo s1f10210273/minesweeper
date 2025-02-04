@@ -11,6 +11,7 @@ export type GameData = {
   gameStatus?: string | undefined;
   cellsWithoutMines: number;
   numOfMines: number;
+  numOfFlags: number;
 };
 
 interface BoardProps {
@@ -50,6 +51,7 @@ export default function Board({ row, col, mines }: BoardProps) {
       gameStatus: 'Game in Progress',
       cellsWithoutMines: row * col - mines,
       numOfMines: mines,
+      numOfFlags: mines,
     });
 
     // ゲーム開始時間を記録
@@ -86,6 +88,13 @@ export default function Board({ row, col, mines }: BoardProps) {
     const newBoard = [...gameData.board];
     const newNumOfMines = gameData.numOfMines;
     const cell = newBoard[x][y];
+
+    // フラグの数に応じて残りのフラグを設定
+    if (cell.flagged === false) {
+      gameData.numOfFlags--;
+    } else {
+      gameData.numOfFlags++;
+    }
 
     cell.flagged = !cell.flagged;
 
@@ -189,7 +198,7 @@ export default function Board({ row, col, mines }: BoardProps) {
         {/* 地雷数 */}
         <div className="flex items-center space-x-2">
           <span>💣</span>
-          <span>{gameData.numOfMines}</span>
+          <span>{gameData.numOfFlags}</span>
         </div>
 
         {/* ゲーム経過時間 */}
