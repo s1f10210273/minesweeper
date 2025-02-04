@@ -42,9 +42,14 @@ export default function DisplayCell({
   return (
     <button
       className={`
-        w-10 h-10 border border-gray-300 text-center leading-10
+        w-10 h-10 border border-gray-300 text-center leading-10 font-bold
         ${cell.revealed ? 'bg-gray-200' : 'bg-gray-500'}
         ${cell.flagged ? 'bg-gray-400' : ''}
+        ${cell.revealed && cell.value === -1 ? 'bg-red-200' : ''}
+        ${cell.value === 1 ? 'text-sky-500' : ''}
+        ${cell.value === 2 ? 'text-lime-500' : ''}
+        ${cell.value === 3 ? 'text-orange-500' : ''}
+        ${cell.value >= 4 ? 'text-red-500' : ''}
         cursor-pointer
       `}
       onMouseDown={handleMouseDown}

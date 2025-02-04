@@ -138,12 +138,12 @@ export default function Board({ row, col, mines }: BoardProps) {
   }
 
   return (
-    <div>
-      <h1 className="text-2xl font-bold mb-4">MineSweeper</h1>
+    <div className="min-h-screen flex flex-col items-center justify-start p-4 bg-gray-100">
+      {/* グリッドコンテナ */}
       <div
         className="grid"
         style={{
-          gridTemplateColumns: `repeat(${col}, 40px)`,
+          gridTemplateColumns: `repeat(${col}, minmax(40px, 1fr))`,
         }}
       >
         {gameData.board.map((row, x) =>
@@ -159,10 +159,16 @@ export default function Board({ row, col, mines }: BoardProps) {
         )}
       </div>
 
-      <div className="mt-4">
-        <p>Status: {gameData.gameStatus}</p>
-        <p>Cells without mines: {gameData.cellsWithoutMines}</p>
-        <p>Number of mines: {gameData.numOfMines}</p>
+      {/* ゲーム情報 */}
+      <div className="mt-6 text-center text-lg space-y-2">
+        <p>💣 {gameData.numOfMines}</p>
+
+        {/* gameStatusが'win'または'lose'の場合にのみ表示 */}
+        {(gameData.gameStatus === 'win' || gameData.gameStatus === 'lose') && (
+          <p className="font-semibold text-xl">
+            {gameData.gameStatus === 'win' ? 'You Win!' : 'Game Over!'}
+          </p>
+        )}
       </div>
     </div>
   );
