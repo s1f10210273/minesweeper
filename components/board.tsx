@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react';
 import type { Cell } from '@/game/createBoard';
 import createBoard from '@/game/createBoard';
 import DisplayCell from '@/components/cell';
+import Loading from '@/components/Loading';
+
 export type GameData = {
   board: Cell[][];
   gameStatus?: string | undefined;
@@ -152,7 +154,7 @@ export default function Board({ row, col, mines }: BoardProps) {
   };
 
   if (!gameData) {
-    return <div>Loading...</div>;
+    return <Loading />;
   }
 
   return (
