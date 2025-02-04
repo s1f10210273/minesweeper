@@ -63,6 +63,8 @@ export default function Board({ row, col, mines }: BoardProps) {
     }
 
     if (gameData.board[x][y].revealed) return;
+    // フラグを立ててたら開けられない
+    if (gameData.board[x][y].flagged) return;
 
     const newBoard = [...gameData.board];
 
@@ -70,7 +72,11 @@ export default function Board({ row, col, mines }: BoardProps) {
     if (newBoard[x][y].value === -1) {
       for (let x = 0; x < newBoard.length; x++) {
         for (let y = 0; y < newBoard[x].length; y++) {
-          newBoard[x][y] = { ...newBoard[x][y], revealed: true };
+          newBoard[x][y] = {
+            ...newBoard[x][y],
+            revealed: true,
+            flagged: false,
+          };
         }
       }
       setGameData({
