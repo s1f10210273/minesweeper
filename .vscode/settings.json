@@ -19,6 +19,6 @@
   "editor.tabSize": 2, // インデントを2スペースに設定
   "editor.insertSpaces": true,
   "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": true
+    "source.fixAll.eslint": "explicit"
   } // タブではなくスペースを使用
 }

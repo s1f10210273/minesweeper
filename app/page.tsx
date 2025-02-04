@@ -1,9 +1,9 @@
-import Board from "@/components/board";
+import Board from '@/components/board';
 
 export default function Home() {
   return (
     <>
-      <Board />
+      <Board row={10} col={10} mines={15} />
     </>
   );
 }
