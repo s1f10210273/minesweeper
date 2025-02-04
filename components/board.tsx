@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import type { Cell } from '@/game/createBoard';
 import createBoard from '@/game/createBoard';
-
+import DisplayCell from '@/components/cell';
 type GameData = {
   board: Cell[][];
   gameStatus: string;
@@ -46,20 +46,7 @@ export default function Board({ row, col, mines }: BoardProps) {
         }}
       >
         {gameData.board.map((row, x) =>
-          row.map((cell, y) => (
-            <div
-              key={`${x}-${y}`}
-              className={`
-                w-10 h-10 border border-gray-300 text-center leading-10
-                ${cell.revealed ? 'bg-gray-200' : 'bg-white'}
-                ${cell.flagged ? 'bg-yellow-200' : ''}
-                cursor-pointer
-              `}
-            >
-              {/* {cell.revealed ? (cell.value === -1 ? '💣' : cell.value) : ''}{' '} */}
-              {cell.value}
-            </div>
-          ))
+          row.map((cell, y) => <DisplayCell key={`${x}-${y}`} cell={cell} />)
         )}
       </div>
 
