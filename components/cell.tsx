@@ -1,12 +1,16 @@
 import { useState } from 'react';
 import { Cell } from '@/game/createBoard';
-
+import type { GameData } from '@/components/board';
 export default function DisplayCell({
   cell,
+  gameData,
   onUpdateFlag,
+  onOpen,
 }: {
   cell: Cell;
+  gameData: GameData;
   onUpdateFlag: (x: number, y: number) => void;
+  onOpen: (x: number, y: number, data: GameData) => void;
 }) {
   const [pressTimeout, setPressTimeout] = useState<NodeJS.Timeout | null>(null);
 
@@ -46,6 +50,7 @@ export default function DisplayCell({
       onMouseDown={handleMouseDown}
       onMouseUp={handleMouseUp}
       onMouseLeave={handleMouseLeave}
+      onClick={() => onOpen(cell.x, cell.y, gameData)}
     >
       {/* セルが開かれている場合は地雷（💣）または隣接する地雷の数を表示 */}
       {cell.revealed ? (cell.value === -1 ? '💣' : cell.value) : ''}

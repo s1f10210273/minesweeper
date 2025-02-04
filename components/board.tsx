@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import type { Cell } from '@/game/createBoard';
 import createBoard from '@/game/createBoard';
 import DisplayCell from '@/components/cell';
-type GameData = {
+export type GameData = {
   board: Cell[][];
   gameStatus?: string | undefined;
   cellsWithoutMines: number;
@@ -33,29 +33,7 @@ export default function Board({ row, col, mines }: BoardProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // const handleUpdateFlag = (x: number, y: number) => {
-  //   if (gameData?.board[x][y].revealed) return;
-
-  //   setGameData((prev) => {
-  //     if (!prev) {
-  //       // エラー
-  //       throw new Error('Game data is null. Cannot update flag.');
-  //     }
-  //     const newBoard = [...prev.board];
-  //     const newNumOfMines = prev.numOfMines;
-  //     const cell = newBoard[x][y];
-  //     cell.flagged = !cell.flagged;
-  //     console.log('clicked');
-  //     console.log(newBoard);
-
-  //     return {
-  //       ...prev,
-  //       numOfMines: newNumOfMines,
-  //       board: newBoard,
-  //     };
-  //   });
-  // };
-
+  // フラグをアップデートする関数
   const handleUpdateFlag = (x: number, y: number) => {
     if (!gameData) {
       // エラー
@@ -77,6 +55,77 @@ export default function Board({ row, col, mines }: BoardProps) {
     });
   };
 
+  // マスを開ける関数
+  const handleRevealCell = (x: number, y: number) => {
+    if (!gameData) {
+      // エラー
+      throw new Error('Game data is null. Cannot update flag.');
+    }
+
+    if (gameData.board[x][y].revealed) return;
+
+    const newBoard = [...gameData.board];
+
+    // 爆弾だったら全部オープン
+    if (newBoard[x][y].value === -1) {
+      for (let x = 0; x < newBoard.length; x++) {
+        for (let y = 0; y < newBoard[x].length; y++) {
+          newBoard[x][y] = { ...newBoard[x][y], revealed: true };
+        }
+      }
+      setGameData({
+        ...gameData,
+        board: newBoard,
+        gameStatus: 'lose',
+      });
+    }
+
+    // 複数マスオープン
+    else if (newBoard[x][y].value === 0) {
+      const newReveledData = revealEmpty(x, y, gameData);
+
+      setGameData({
+        ...gameData,
+        board: newReveledData.board,
+      });
+    }
+
+    // 1マスオープン
+    else {
+      newBoard[x][y] = { ...newBoard[x][y], revealed: true };
+
+      setGameData({
+        ...gameData,
+        board: newBoard,
+        cellsWithoutMines: gameData.cellsWithoutMines--,
+      });
+    }
+  };
+
+  // 複数オープン用の関数
+  const revealEmpty = (x: number, y: number, data: GameData): GameData => {
+    if (data.board[x][y].revealed) return data;
+
+    data.board[x][y].revealed = true;
+    data.cellsWithoutMines--;
+
+    if (data.cellsWithoutMines === 0) {
+      data.gameStatus = 'win';
+    }
+
+    if (data.board[x][y].value === 0) {
+      for (let y2 = Math.max(y - 1, 0); y2 < Math.min(y + 2, col); y2++) {
+        for (let x2 = Math.max(x - 1, 0); x2 < Math.min(x + 2, col); x2++) {
+          if (x2 != x || y2 != y) {
+            revealEmpty(x2, y2, data);
+          }
+        }
+      }
+    }
+
+    return data;
+  };
+
   if (!gameData) {
     return <div>Loading...</div>;
   }
@@ -95,7 +144,9 @@ export default function Board({ row, col, mines }: BoardProps) {
             <DisplayCell
               key={`${x}-${y}`}
               cell={cell}
+              gameData={gameData}
               onUpdateFlag={handleUpdateFlag}
+              onOpen={handleRevealCell}
             />
           ))
         )}
