@@ -153,12 +153,18 @@ export default function Board({ row, col, mines }: BoardProps) {
     return data;
   };
 
+  const handleReset = () => {
+    // window.location.href を使って遷移
+    window.location.href = '/';
+  };
+
   if (!gameData) {
     return <Loading />;
   }
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-start p-4 bg-gray-100">
+      <p>💣 {gameData.numOfMines}</p>
       {/* グリッドコンテナ */}
       <div
         className="grid"
@@ -180,14 +186,24 @@ export default function Board({ row, col, mines }: BoardProps) {
       </div>
 
       {/* ゲーム情報 */}
-      <div className="mt-6 text-center text-lg space-y-2">
-        <p>💣 {gameData.numOfMines}</p>
-
-        {/* gameStatusが'win'または'lose'の場合にのみ表示 */}
+      {(gameData.gameStatus === 'win' || gameData.gameStatus === 'lose') && (
+        <div className="absolute inset-0 bg-black bg-opacity-50 z-10"></div>
+      )}
+      {/* ステータスメッセージ */}
+      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20 text-white text-center">
         {(gameData.gameStatus === 'win' || gameData.gameStatus === 'lose') && (
-          <p className="font-semibold text-xl">
-            {gameData.gameStatus === 'win' ? 'You Win!' : 'Game Over!'}
-          </p>
+          <>
+            <p className="text-3xl font-semibold mb-4">
+              {gameData.gameStatus === 'win' ? 'You Win!' : 'Game Over!'}
+            </p>
+            {/* リセットボタン */}
+            <button
+              className="bg-gray-700 text-white py-2 px-6 rounded-full shadow-md"
+              onClick={handleReset}
+            >
+              Reset
+            </button>
+          </>
         )}
       </div>
     </div>
