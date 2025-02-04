@@ -53,7 +53,7 @@ export default function DisplayCell({
       onClick={() => onOpen(cell.x, cell.y, gameData)}
     >
       {/* セルが開かれている場合は地雷（💣）または隣接する地雷の数を表示 */}
-      {cell.revealed ? (cell.value === -1 ? '💣' : cell.value) : ''}
+      {cell.revealed ? (cell.value === -1 ? '💣' : cell.value || '') : ''}
 
       {cell.flagged ? '🚩' : ''}
     </button>
