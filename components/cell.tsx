@@ -42,7 +42,7 @@ export default function DisplayCell({
   return (
     <button
       className={`
-        w-10 h-10 border border-gray-300 text-center leading-10 font-bold
+        w-8 h-8 border border-gray-300 text-center leading-8 font-bold
         ${cell.revealed ? 'bg-gray-200' : 'bg-gray-500'}
         ${cell.flagged ? 'bg-gray-400' : ''}
         ${cell.revealed && cell.value === -1 ? 'bg-red-200' : ''}
