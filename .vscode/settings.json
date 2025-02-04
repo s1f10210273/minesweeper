@@ -1,0 +1,24 @@
+{
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode", // Prettierの拡張を使う
+  "eslint.autoFixOnSave": true, // ESLintの自動修正を有効にする
+  "eslint.alwaysShowStatus": true,
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact",
+    "vue",
+    "json"
+  ],
+  "prettier.singleQuote": true, // シングルクォートを優先する設定（任意）
+  "prettier.trailingComma": "es5", // 配列やオブジェクトの末尾にカンマを追加する設定（任意）
+  "prettier.semi": true, // セミコロンを使用する設定（任意）
+  "files.eol": "\n", // 改行コードの統一
+  "files.autoSave": "onWindowChange", // ウィンドウが変更されたときに自動保存する
+  "editor.tabSize": 2, // インデントを2スペースに設定
+  "editor.insertSpaces": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  } // タブではなくスペースを使用
+}
