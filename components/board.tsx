@@ -21,6 +21,8 @@ interface BoardProps {
 
 export default function Board({ row, col, mines }: BoardProps) {
   const [gameData, setGameData] = useState<GameData | null>(null);
+  const [startTime, setStartTime] = useState<number | null>(null); // ゲーム開始時間
+  const [elapsedTime, setElapsedTime] = useState<number>(0); // 経過時間
 
   useEffect(() => {
     // 右クリックを無効にするイベントリスナー
@@ -40,7 +42,6 @@ export default function Board({ row, col, mines }: BoardProps) {
     };
   }, []);
 
-  // useEffectでゲームボードを作成
   useEffect(() => {
     const newBoard = createBoard(row, col, mines);
 
@@ -50,8 +51,28 @@ export default function Board({ row, col, mines }: BoardProps) {
       cellsWithoutMines: row * col - mines,
       numOfMines: mines,
     });
+
+    // ゲーム開始時間を記録
+    setStartTime(Date.now());
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    // ゲームが進行中であれば経過時間を更新
+    if (gameData?.gameStatus === 'Game in Progress') {
+      const interval = setInterval(() => {
+        if (startTime) {
+          setElapsedTime(Math.floor((Date.now() - startTime) / 1000)); // 秒単位で経過時間
+        }
+      }, 1000);
+
+      return () => clearInterval(interval);
+    }
+
+    // ゲームが終了したらタイマーを止める
+    return () => {};
+  }, [gameData?.gameStatus, startTime]);
 
   // フラグをアップデートする関数
   const handleUpdateFlag = (x: number, y: number) => {
@@ -164,7 +185,20 @@ export default function Board({ row, col, mines }: BoardProps) {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-start p-4 bg-gray-100">
-      <p>💣 {gameData.numOfMines}</p>
+      <div className="grid grid-cols-2 gap-4 w-full max-w-xs mx-auto mb-4 text-xl">
+        {/* 地雷数 */}
+        <div className="flex items-center space-x-2">
+          <span>💣</span>
+          <span>{gameData.numOfMines}</span>
+        </div>
+
+        {/* ゲーム経過時間 */}
+        <div className="flex items-center space-x-2 justify-end">
+          <span>🕰️</span>
+          <span>{elapsedTime}</span>
+        </div>
+      </div>
+
       {/* グリッドコンテナ */}
       <div
         className="grid"
