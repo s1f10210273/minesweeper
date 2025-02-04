@@ -20,6 +20,24 @@ interface BoardProps {
 export default function Board({ row, col, mines }: BoardProps) {
   const [gameData, setGameData] = useState<GameData | null>(null);
 
+  useEffect(() => {
+    // 右クリックを無効にするイベントリスナー
+    const disableRightClick = (e: MouseEvent) => {
+      if (e.button === 2) {
+        // 右クリック（button === 2）
+        e.preventDefault();
+      }
+    };
+
+    // ボード内で右クリックを無効にする
+    document.addEventListener('contextmenu', disableRightClick);
+
+    // クリーンアップ
+    return () => {
+      document.removeEventListener('contextmenu', disableRightClick);
+    };
+  }, []);
+
   // useEffectでゲームボードを作成
   useEffect(() => {
     const newBoard = createBoard(row, col, mines);
