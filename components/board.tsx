@@ -113,6 +113,7 @@ export default function Board({ row, col, mines }: BoardProps) {
     if (data.board[x][y].revealed) return data;
 
     data.board[x][y].revealed = true;
+    data.board[x][y].flagged = false;
     data.cellsWithoutMines--;
 
     if (data.cellsWithoutMines === 0) {
