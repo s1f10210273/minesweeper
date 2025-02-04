@@ -193,8 +193,8 @@ export default function Board({ row, col, mines }: BoardProps) {
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-start p-4 bg-gray-100">
-      <div className="grid grid-cols-2 gap-4 w-full max-w-xs mx-auto mb-4 text-xl">
+    <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-gray-100">
+      <div className="px-6 grid grid-cols-2 gap-4 w-full max-w-xs mx-auto mb-4 text-xl">
         {/* 地雷数 */}
         <div className="flex items-center space-x-2">
           <span>💣</span>
@@ -212,7 +212,7 @@ export default function Board({ row, col, mines }: BoardProps) {
       <div
         className="grid"
         style={{
-          gridTemplateColumns: `repeat(${col}, minmax(40px, 1fr))`,
+          gridTemplateColumns: `repeat(${col}, minmax(20px, 1fr))`,
         }}
       >
         {gameData.board.map((row, x) =>
