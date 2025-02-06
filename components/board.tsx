@@ -151,7 +151,6 @@ export default function Board({ row, col, mines }: BoardProps) {
 
       if (gameData.cellsWithoutMines === 0) {
         gameData.gameStatus = 'win';
-        setIsStart(false);
       }
 
       setGameData({
@@ -172,7 +171,6 @@ export default function Board({ row, col, mines }: BoardProps) {
 
     if (data.cellsWithoutMines === 0) {
       data.gameStatus = 'win';
-      setIsStart(false);
     }
 
     if (data.board[x][y].value === 0) {
