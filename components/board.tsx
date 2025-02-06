@@ -5,6 +5,7 @@ import type { Cell } from '@/game/createBoard';
 import createBoard from '@/game/createBoard';
 import DisplayCell from '@/components/cell';
 import Loading from '@/components/Loading';
+import { useRouter } from 'next/navigation';
 
 export type GameData = {
   board: Cell[][];
@@ -56,7 +57,7 @@ export default function Board({ row, col, mines }: BoardProps) {
     });
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [isStart]);
 
   useEffect(() => {
     // ゲームが進行中であれば経過時間を更新
@@ -151,6 +152,7 @@ export default function Board({ row, col, mines }: BoardProps) {
 
       if (gameData.cellsWithoutMines === 0) {
         gameData.gameStatus = 'win';
+        setIsStart(false);
       }
 
       setGameData({
@@ -171,6 +173,7 @@ export default function Board({ row, col, mines }: BoardProps) {
 
     if (data.cellsWithoutMines === 0) {
       data.gameStatus = 'win';
+      setIsStart(false);
     }
 
     if (data.board[x][y].value === 0) {
@@ -186,15 +189,11 @@ export default function Board({ row, col, mines }: BoardProps) {
     return data;
   };
 
-  const handleReset = () => {
-    // window.location.href を使って遷移
-    window.location.href = '/';
-  };
+  const router = useRouter();
 
   const handleStart = () => {
+    router.push('/');
     setIsStart(!isStart);
-
-    // ゲーム開始時間を記録
     setStartTime(Date.now());
   };
 
@@ -256,9 +255,9 @@ export default function Board({ row, col, mines }: BoardProps) {
                 {/* リセットボタン */}
                 <button
                   className="bg-gray-700 text-white py-2 px-6 rounded-full shadow-md"
-                  onClick={handleReset}
+                  onClick={handleStart}
                 >
-                  Reset
+                  Restart
                 </button>
               </>
             )}
