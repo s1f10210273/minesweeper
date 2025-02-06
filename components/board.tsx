@@ -24,6 +24,7 @@ export default function Board({ row, col, mines }: BoardProps) {
   const [gameData, setGameData] = useState<GameData | null>(null);
   const [startTime, setStartTime] = useState<number | null>(null); // ゲーム開始時間
   const [elapsedTime, setElapsedTime] = useState<number>(0); // 経過時間
+  const [isStart, setIsStart] = useState(false);
 
   useEffect(() => {
     // 右クリックを無効にするイベントリスナー
@@ -53,9 +54,6 @@ export default function Board({ row, col, mines }: BoardProps) {
       numOfMines: mines,
       numOfFlags: mines,
     });
-
-    // ゲーム開始時間を記録
-    setStartTime(Date.now());
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -193,67 +191,97 @@ export default function Board({ row, col, mines }: BoardProps) {
     window.location.href = '/';
   };
 
+  const handleStart = () => {
+    setIsStart(!isStart);
+
+    // ゲーム開始時間を記録
+    setStartTime(Date.now());
+  };
+
   if (!gameData) {
     return <Loading />;
   }
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-gray-100">
-      <div className="px-6 grid grid-cols-2 gap-4 w-full max-w-xs mx-auto mb-4 text-xl">
-        {/* 地雷数 */}
-        <div className="flex items-center space-x-2">
-          <span>💣</span>
-          <span>{gameData.numOfFlags}</span>
-        </div>
+      {isStart ? (
+        <>
+          <div className="px-6 grid grid-cols-2 gap-4 w-full max-w-xs mx-auto mb-4 text-xl">
+            {/* 地雷数 */}
+            <div className="flex items-center space-x-2">
+              <span>💣</span>
+              <span>{gameData.numOfFlags}</span>
+            </div>
 
-        {/* ゲーム経過時間 */}
-        <div className="flex items-center space-x-2 justify-end">
-          <span>🕰️</span>
-          <span>{elapsedTime}</span>
-        </div>
-      </div>
+            {/* ゲーム経過時間 */}
+            <div className="flex items-center space-x-2 justify-end">
+              <span>🕰️</span>
+              <span>{elapsedTime}</span>
+            </div>
+          </div>
 
-      {/* グリッドコンテナ */}
-      <div
-        className="grid"
-        style={{
-          gridTemplateColumns: `repeat(${col}, minmax(20px, 1fr))`,
-        }}
-      >
-        {gameData.board.map((row, x) =>
-          row.map((cell, y) => (
-            <DisplayCell
-              key={`${x}-${y}`}
-              cell={cell}
-              gameData={gameData}
-              onUpdateFlag={handleUpdateFlag}
-              onOpen={handleRevealCell}
-            />
-          ))
-        )}
-      </div>
+          {/* グリッドコンテナ */}
+          <div
+            className="grid"
+            style={{
+              gridTemplateColumns: `repeat(${col}, minmax(20px, 1fr))`,
+            }}
+          >
+            {gameData.board.map((row, x) =>
+              row.map((cell, y) => (
+                <DisplayCell
+                  key={`${x}-${y}`}
+                  cell={cell}
+                  gameData={gameData}
+                  onUpdateFlag={handleUpdateFlag}
+                  onOpen={handleRevealCell}
+                />
+              ))
+            )}
+          </div>
 
-      {/* ゲーム情報 */}
-      {(gameData.gameStatus === 'win' || gameData.gameStatus === 'lose') && (
-        <div className="absolute inset-0 bg-black bg-opacity-50 z-10"></div>
+          {/* ゲーム情報 */}
+          {(gameData.gameStatus === 'win' ||
+            gameData.gameStatus === 'lose') && (
+            <div className="absolute inset-0 bg-black bg-opacity-50 z-10"></div>
+          )}
+          {/* ステータスメッセージ */}
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20 text-white text-center">
+            {(gameData.gameStatus === 'win' ||
+              gameData.gameStatus === 'lose') && (
+              <>
+                <p className="text-3xl font-semibold mb-4">
+                  {gameData.gameStatus === 'win' ? 'You Win!' : 'Game Over!'}
+                </p>
+                {/* リセットボタン */}
+                <button
+                  className="bg-gray-700 text-white py-2 px-6 rounded-full shadow-md"
+                  onClick={handleReset}
+                >
+                  Reset
+                </button>
+              </>
+            )}
+          </div>
+        </>
+      ) : (
+        <>
+          <div className="absolute inset-0 bg-black bg-opacity-50 z-10"></div>
+
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20 text-white text-center">
+            <>
+              <p className="text-3xl font-semibold mb-4">Game Start</p>
+              {/* リセットボタン */}
+              <button
+                className="bg-gray-700 text-white py-2 px-6 rounded-full shadow-md"
+                onClick={handleStart}
+              >
+                Start
+              </button>
+            </>
+          </div>
+        </>
       )}
-      {/* ステータスメッセージ */}
-      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20 text-white text-center">
-        {(gameData.gameStatus === 'win' || gameData.gameStatus === 'lose') && (
-          <>
-            <p className="text-3xl font-semibold mb-4">
-              {gameData.gameStatus === 'win' ? 'You Win!' : 'Game Over!'}
-            </p>
-            {/* リセットボタン */}
-            <button
-              className="bg-gray-700 text-white py-2 px-6 rounded-full shadow-md"
-              onClick={handleReset}
-            >
-              Reset
-            </button>
-          </>
-        )}
-      </div>
     </div>
   );
 }
