@@ -5,7 +5,6 @@ import type { Cell } from '@/game/createBoard';
 import createBoard from '@/game/createBoard';
 import DisplayCell from '@/components/cell';
 import Loading from '@/components/Loading';
-import { useRouter } from 'next/navigation';
 
 export type GameData = {
   board: Cell[][];
@@ -189,10 +188,7 @@ export default function Board({ row, col, mines }: BoardProps) {
     return data;
   };
 
-  const router = useRouter();
-
   const handleStart = () => {
-    router.push('/');
     setIsStart(!isStart);
     setStartTime(Date.now());
   };
