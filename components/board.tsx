@@ -149,6 +149,11 @@ export default function Board({ row, col, mines }: BoardProps) {
     // 1マスオープン
     else {
       newBoard[x][y] = { ...newBoard[x][y], revealed: true };
+      gameData.cellsWithoutMines--;
+
+      if (gameData.cellsWithoutMines === 0) {
+        gameData.gameStatus = 'win';
+      }
 
       setGameData({
         ...gameData,
