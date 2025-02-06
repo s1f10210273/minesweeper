@@ -55,6 +55,9 @@ export default function DisplayCell({
       onMouseDown={handleMouseDown}
       onMouseUp={handleMouseUp}
       onMouseLeave={handleMouseLeave}
+      onTouchStart={handleMouseDown}
+      onTouchEnd={handleMouseUp}
+      onTouchMove={handleMouseLeave}
       onClick={() => onOpen(cell.x, cell.y, gameData)}
     >
       {/* セルが開かれている場合は地雷（💣）または隣接する地雷の数を表示 */}
